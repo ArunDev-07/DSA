@@ -38,3 +38,5 @@ public class InfiniteArray {
 // newstart means start = 0 end = 1 then newstart =  end + 1 it starts from next iteration that means after the end why we didnt put start instead of newstart because we use start in the end also we need that old start.
 // then end  = end + (end - start + 1 ) * 2 that means 1 + (1 - 0 + 1) * 2 = 5 then start = 2 now it checks from 2 to 5 . first it takes 2 values then it takes 4 values then it takes 8 values like that it checks until the target>=end .
 // then we use that start and end in that normal binary search then we find the mid value.
+// in the first we find the start and end positions 4 and 7 the binary search uses that start and end then find the ans.
+// the main is newstart = end + 1 then we assign the start =  newstart. then end = end + (end - start + 1) *2
