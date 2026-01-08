@@ -32,5 +32,7 @@ class Solution {
 
 
 //in java System.out.println("a" + 1 + new ArrayList<>()) if we add anything using String it we concatenate all.
+//if we add the character 'a' + 2 it returns c because in unicode a char = 97 c = 99 so it returns c.
+// if an interviewer asks print all the alphabets using one for loop means it is easy using unicode.
+// for( i = 0 to 26 i++ ) char c   = (char) -> casting ( 'a' + i) ;  in the String series  = "" ; series+= ch ; System.out.println(series) ;
 
-//if we add the character 'a' + 2 it returns c because in unicode a char = 97 c = 99 so it returns c
