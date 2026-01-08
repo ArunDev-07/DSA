@@ -29,3 +29,8 @@ class Solution {
         return true;
     }
 }
+
+
+//in java System.out.println("a" + 1 + new ArrayList<>()) if we add anything using String it we concatenate all.
+
+//if we add the character 'a' + 2 it returns c because in unicode a char = 97 c = 99 so it returns c
