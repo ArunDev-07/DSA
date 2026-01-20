@@ -32,6 +32,7 @@ class Solution {
         isPrime[i] = false → i is not prime
         */
         boolean[] isPrime = new boolean[n];
+        //Arrays.fill(isPrime , true) ; (WE CAN USE THIS ALSO)
 
         /*
         STEP 2: Initially mark all numbers from 2 to n-1 as prime
