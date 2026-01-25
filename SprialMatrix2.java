@@ -16,48 +16,90 @@ class Solution {
      * 1 2 3
      * 8 9 4
      * 7 6 5
+     *
+     * Dry Run for n = 3:
+     * Initial state:
+     * ans = [
+     *   [0,0,0],
+     *   [0,0,0],
+     *   [0,0,0]
+     * ]
+     * top = 0, bottom = 2, left = 0, right = 2, value = 1
+     *
+     * Iteration 1:
+     * 1️⃣ Fill top row (left→right): ans[0][0..2] = 1,2,3
+     * ans =
+     * [1, 2, 3]
+     * [0, 0, 0]
+     * [0, 0, 0]
+     * top++ → top = 1
+     *
+     * 2️⃣ Fill right column (top→bottom): ans[1..2][2] = 4,5
+     * ans =
+     * [1, 2, 3]
+     * [0, 0, 4]
+     * [0, 0, 5]
+     * right-- → right = 1
+     *
+     * 3️⃣ Fill bottom row (right→left): ans[2][1..0] = 6,7
+     * ans =
+     * [1, 2, 3]
+     * [0, 0, 4]
+     * [7, 6, 5]
+     * bottom-- → bottom = 1
+     *
+     * 4️⃣ Fill left column (bottom→top): ans[1..1][0] = 8
+     * ans =
+     * [1, 2, 3]
+     * [8, 0, 4]
+     * [7, 6, 5]
+     * left++ → left = 1
+     *
+     * Iteration 2 (center):
+     * 1️⃣ Fill top row (left→right): ans[1][1] = 9
+     * ans =
+     * [1, 2, 3]
+     * [8, 9, 4]
+     * [7, 6, 5]
+     * top++ → top = 2
+     *
+     * While loop condition fails (top=2 > bottom=1, left=1 <= right=1), loop stops.
+     * Final spiral matrix complete.
      */
     public int[][] generateMatrix(int n) {
-        // Create an empty n x n matrix
         int[][] ans = new int[n][n];
 
-        // Initialize boundaries for spiral traversal
-        int top = 0;           // top row index
-        int bottom = n - 1;    // bottom row index
-        int left = 0;          // left column index
-        int right = n - 1;     // right column index
+        int top = 0, bottom = n - 1, left = 0, right = n - 1;
+        int value = 1;
 
-        int value = 1;         // Start filling the matrix with 1
-
-        // Loop until the spiral boundaries overlap
         while (top <= bottom && left <= right) {
 
-            // 1️⃣ Fill the top row from left to right
+            // Fill top row
             for (int i = left; i <= right; i++) {
                 ans[top][i] = value++;
             }
-            top++;  // Move the top boundary down
+            top++;
 
-            // 2️⃣ Fill the right column from top to bottom
+            // Fill right column
             for (int i = top; i <= bottom; i++) {
                 ans[i][right] = value++;
             }
-            right--;  // Move the right boundary left
+            right--;
 
-            // 3️⃣ Fill the bottom row from right to left (if still remaining)
+            // Fill bottom row
             if (top <= bottom) {
                 for (int i = right; i >= left; i--) {
                     ans[bottom][i] = value++;
                 }
-                bottom--; // Move the bottom boundary up
+                bottom--;
             }
 
-            // 4️⃣ Fill the left column from bottom to top (if still remaining)
+            // Fill left column
             if (left <= right) {
                 for (int i = bottom; i >= top; i--) {
                     ans[i][left] = value++;
                 }
-                left++; // Move the left boundary right
+                left++;
             }
         }
 
