@@ -120,4 +120,7 @@ public class ProductMergeSort {
      *
      * ✅ Final sorted array: [1,2,3,4,5]
      */
+//     s comes from the array index.
+// When we do s + a, the values are placed starting from index s up to e - 1,
+// NOT from index 0.
 }
