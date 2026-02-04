@@ -1,239 +1,130 @@
-import java.util.*;
+package com.example.DSA_JAVA.Recursion;
 
-/*
-=====================================
-COMBINATION SUM II – LEETCODE 40
-=====================================
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-Problem:
----------
-candidates = [10,1,2,7,6,1,5]
-target = 8
+/**
+ * Problem: Combination Sum II
+ *
+ * Given an array of integers (may contain duplicates) and a target value,
+ * find all unique combinations where the numbers sum up to the target.
+ * Each number can only be used once.
+ *
+ * Solution Approach:
+ * - Sort the array first to handle duplicates easily.
+ * - Use backtracking recursion to explore two choices at each step:
+ *   1. Include the current number in the combination
+ *   2. Exclude the current number and skip duplicates
+ * - Keep track of remaining target.
+ * - When target == 0, add the current combination to the answer.
+ * - When target < 0 or index reaches end of array, stop the recursion (dead end).
+ *
+ * Key Points:
+ * - Backtracking helps to explore all possibilities.
+ * - Sorting + skipping duplicates ensures unique combinations only.
+ */
 
-Rules:
-------
-1) Each number can be used ONLY ONCE
-2) The array may contain DUPLICATES
-3) Result must NOT contain duplicate combinations
-4) Order does NOT matter
+public class CombinationSumII {
 
-Output:
--------
-[
- [1,1,6],
- [1,2,5],
- [1,7],
- [2,6]
-]
-
--------------------------------------
-MAIN DIFFERENCE FROM COMBINATION SUM I
--------------------------------------
-Combination Sum I:
-- Reuse allowed
-- index stays same on pick
-
-Combination Sum II:
-- Reuse NOT allowed
-- index always moves forward
-- MUST SKIP DUPLICATES
-*/
-
-class Solution {
-
-    public List<List<Integer>> combinationSum2(int[] arr, int target) {
-
-        // VERY IMPORTANT → sort the array
-        // This helps us SKIP duplicates
-        Arrays.sort(arr);
+    public static void main(String[] args) {
+        int[] arr = {1, 2, 3, 4, 5};
+        Arrays.sort(arr); // Step 1: sort the array
+        int target = 8;
 
         List<List<Integer>> ans = new ArrayList<>();
         List<Integer> current = new ArrayList<>();
+        int index = 0;
 
-        backtrack(arr, 0, target, current, ans);
-        return ans;
+        combination(arr, index, target, current, ans);
+
+        System.out.println("All unique combinations that sum to " + target + ":");
+        for (List<Integer> combo : ans) {
+            System.out.println(combo);
+        }
     }
 
-    public void backtrack(
-            int[] arr,
-            int index,
-            int target,
-            List<Integer> current,
-            List<List<Integer>> ans
-    ) {
-
-        /*
-        -------------------
-        BASE CONDITIONS
-        -------------------
-        */
-
-        // ✅ Valid combination found
+    /**
+     * Recursive backtracking function to generate combinations
+     *
+     * @param arr   Sorted input array
+     * @param i     Current index
+     * @param target Remaining target to achieve
+     * @param c     Current combination being formed
+     * @param ans   List of all valid combinations
+     */
+    static void combination(int[] arr, int i, int target, List<Integer> c, List<List<Integer>> ans) {
+        // Base Case 1: Target reached → valid combination
         if (target == 0) {
-            ans.add(new ArrayList<>(current));
+            ans.add(new ArrayList<>(c)); // Add a copy of current combination
             return;
         }
 
-        // ❌ Invalid path
-        if (target < 0) {
+        // Base Case 2: Target negative or index out of bounds → dead end
+        if (target < 0 || i == arr.length) {
             return;
         }
 
-        /*
-        -------------------
-        LOOP CHOICE
-        -------------------
-        We use a FOR LOOP instead of pick / not pick
-        because reuse is NOT allowed
-        */
+        // Choice 1: Include the current element
+        c.add(arr[i]);
+        combination(arr, i + 1, target - arr[i], c, ans); // Move to next index
+        c.remove(c.size() - 1); // Backtrack
 
-        for (int i = index; i < arr.length; i++) {
-
-            /*
-            ----------------------------------
-            DUPLICATE SKIPPING (MOST IMPORTANT)
-            ----------------------------------
-            If current element is same as previous
-            AND we are at the same recursion level,
-            then skip it.
-            */
-            if (i > index && arr[i] == arr[i - 1]) {
-                continue;
-            }
-
-            // ❌ If number is greater than target, stop
-            if (arr[i] > target) {
-                break;
-            }
-
-            /*
-            -------------------
-            PICK ELEMENT
-            -------------------
-            */
-            current.add(arr[i]);
-
-            // Move to NEXT index (reuse NOT allowed)
-            backtrack(arr, i + 1, target - arr[i], current, ans);
-
-            /*
-            -------------------
-            BACKTRACK
-            -------------------
-            */
-            current.remove(current.size() - 1);
+        // Choice 2: Exclude the current element and skip duplicates
+        int next = i + 1;
+        while (next < arr.length && arr[next] == arr[i]) { // Skip duplicates
+            next++;
         }
+        combination(arr, next, target, c, ans);
     }
+
+    /*
+     * -----------------------------
+     * DRY RUN WITH VISUAL RECURSION TREE
+     * Input: arr = [1,2,3,4,5], target = 8
+     *
+     * Recursion Tree (Include / Exclude):
+     *
+     * []
+     * ├── Include 1 → [1], target=7
+     * │   ├── Include 2 → [1,2], target=5
+     * │   │   ├── Include 3 → [1,2,3], target=2
+     * │   │   │   ├── Include 4 → [1,2,3,4], target=-2 ❌
+     * │   │   │   └── Exclude 4 → [1,2,3], try 5 → [1,2,3,5], target=-3 ❌
+     * │   │   └── Exclude 3 → [1,2]
+     * │   │       ├── Include 4 → [1,2,4], target=1 ❌
+     * │   │       └── Include 5 → [1,2,5], target=0 ✅
+     * │   │
+     * │   └── Exclude 2 → [1]
+     * │       ├── Include 3 → [1,3], target=4
+     * │       │   ├── Include 4 → [1,3,4], target=0 ✅
+     * │       │   └── Include 5 → [1,3,5], target=-1 ❌
+     * │       ├── Include 4 → [1,4], target=3 ❌
+     * │       └── Include 5 → [1,5], target=2 ❌
+     * │
+     * └── Exclude 1 → [], target=8
+     *     ├── Include 2 → [2], target=6
+     *     │   ├── Include 3 → [2,3], target=3 ❌
+     *     │   ├── Include 4 → [2,4], target=2 ❌
+     *     │   └── Include 5 → [2,5], target=1 ❌
+     *     ├── Include 3 → [3], target=5
+     *     │   ├── Include 4 → [3,4], target=1 ❌
+     *     │   └── Include 5 → [3,5], target=0 ✅
+     *     ├── Include 4 → [4], target=4
+     *     │   └── Include 5 → [4,5], target=-1 ❌
+     *     └── Include 5 → [5], target=3 ❌
+     *
+     * ✅ Leaf Nodes (Valid Combinations):
+     * [1,2,5]
+     * [1,3,4]
+     * [3,5]
+     *
+     * -----------------------------
+     *
+     * Explanation:
+     * - Each node represents a choice: include or exclude current element.
+     * - Left child = Include element, Right child = Exclude element (skip duplicates if any)
+     * - Backtracking is used to remove the last element after exploring the include path.
+     * - Sorting + skipping duplicates ensures no repeated combinations.
+     */
 }
-
-/*
-=====================================================
-DRY RUN – candidates = [1,1,2,5,6,7,10], target = 8
-=====================================================
-
-Start:
-------
-index = 0, current = [], target = 8
-
---------------------------------
-Pick 1 (index 0)
---------------------------------
-current = [1], target = 7
-
-Pick 1 (index 1)
-current = [1,1], target = 6
-
-Pick 2 → target = 4 ❌
-Pick 5 → target = 1 ❌
-
-Pick 6
-current = [1,1,6], target = 0 ✅
-ADD [1,1,6]
-
-Backtrack → current = [1]
-
---------------------------------
-Pick 2
---------------------------------
-current = [1,2], target = 5
-
-Pick 5
-current = [1,2,5], target = 0 ✅
-ADD [1,2,5]
-
---------------------------------
-Pick 7
---------------------------------
-current = [1,7], target = 0 ✅
-ADD [1,7]
-
---------------------------------
-SKIP duplicate 1 at index 1
---------------------------------
-
---------------------------------
-Pick 2 (index 2)
---------------------------------
-current = [2], target = 6
-
-Pick 6
-current = [2,6], target = 0 ✅
-ADD [2,6]
-
---------------------------------
-Remaining picks exceed target → stop
---------------------------------
-
-FINAL ANSWER:
--------------
-[
- [1,1,6],
- [1,2,5],
- [1,7],
- [2,6]
-]
-*/
-
-/*
-===========================
-WHY DUPLICATE SKIPPING WORKS
-===========================
-
-Example:
----------
-[1,1,2]
-
-At SAME recursion level:
-- First 1 is allowed
-- Second 1 is SKIPPED
-
-But at DEEPER level:
-- Second 1 is allowed
-
-Condition:
------------
-if (i > index && arr[i] == arr[i - 1]) continue;
-
-This avoids SAME combination structure.
-
-===========================
-KEY DIFFERENCES SUMMARY
-===========================
-
-Combination Sum I:
-------------------
-✔ Reuse allowed
-✔ index stays same on pick
-✔ No duplicate skip
-
-Combination Sum II:
--------------------
-✔ Reuse NOT allowed
-✔ index moves forward
-✔ Duplicate skip REQUIRED
-✔ Array MUST be sorted
-
-If you understand THIS FILE,
-👉 you understand ALL combination problems 🔥
-*/
-
