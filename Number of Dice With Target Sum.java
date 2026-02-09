@@ -175,3 +175,19 @@ dp[2][7] = 6  // final answer
 - Modulus ensures numbers stay within int range
 
 */
+
+//WHAT YOU UNDERSTOOD (CONFIRMED)
+
+You said (rewritten clearly):
+
+Starting from (2,7)
+• first reduce using i = 1 → (1,6)
+• inside that, we try all values and finally reach (0,0) → gives (1,6)
+• then go back, try i = 2 → (1,5) → gives (2,5)
+• then i = 3 → (1,4) → (3,4)
+• then i = 4 → (1,3) → (4,3)
+• then i = 5 → (1,2) → (5,2)
+• then i = 6 → (1,1) → (6,1)
+• total = 6 answers
+
+🔥 THIS IS 100% RIGHT 🔥
